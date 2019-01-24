@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width">
+<style>
+body { margin: 0; background: #1a1a1a;}
+img { width: 100%; }
+form { width: 100%; display: flex; padding: 10px; margin: 0; box-sizing: border-box; }
+.stretch { flex-grow: 1; }
+input[type=text]:focus { outline: none; }
+input[type=text] { padding: 5px 10px; border: none; font-size: 14px; }
+input[type=submit] { padding: 5px 20px; color: black; border: none; font-size: 14px; background-color: gold; }
+</style>
+<script>
+var h = null
+if(window.location.hash) {
+  h = window.location.hash.slice(1)
+}
+document.addEventListener("DOMContentLoaded", function(e) {
+  if (h) {
+    var query = {
+      "v": 3,
+      "q": { "find": { "tx.h": h }, "limit": 1 }
+    }
+    var i;
+    document.querySelector("#hash").value = h
+    fetch("https://babel.bitdb.network/q/1DHDifPvtPgKFPZMRSxmVHhiPvFmxZwbfh/" + btoa(JSON.stringify(query)), {
+      headers: { key: "1MEjsi12X32jv8skdTXQTnYiYAKGrGDcq9" }
+    }).then(function(r) {
+      return r.json()
+    }).then(function(r) {
+      var v = r.c[0].out.filter(function(o) {
+        return o
+      })
+      var kk = Object.keys(v[0]).filter(function(k) {
+        return /ls.+/.test(k)
+      })
+      console.log(v[0])
+      console.log(kk)
+      var c = v[0][kk]
+      if (/<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/.test(c)) {
+        document.querySelector("#canvas").innerHTML = c
+      } else {
+        document.querySelector("#canvas").innerHTML = "<img src='" +  c + "'>"
+      }
+    })
+  }
+  document.querySelector("form").addEventListener("submit", function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    window.location.href = window.location.origin + window.location.pathname + "#" + document.querySelector("#hash").value
+    location.reload()
+  })
+})
+</script>
+</head>
+<body>
+<div class='input'>
+<form>
+  <input type='text' id='hash' class='stretch' placeholder='Enter transaction hash that contains a transaction with image data-uri'>
+  <input type='submit' value='done'>
+</form>
+</div>
+<div id='canvas'></div>
+</body>
+</html>
