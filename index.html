@@ -2,13 +2,14 @@
 <head>
 <meta name="viewport" content="width=device-width">
 <style>
-body { margin: 0; background: #1a1a1a;}
+body { margin: 0; }
 img { width: 100%; }
-form { width: 100%; display: flex; padding: 10px; margin: 0; box-sizing: border-box; }
+form { width: 100%; background: #1a1a1a; display: flex; padding: 10px; margin: 0; box-sizing: border-box; }
 .stretch { flex-grow: 1; }
 input[type=text]:focus { outline: none; }
-input[type=text] { padding: 5px 10px; border: none; font-size: 14px; }
+input[type=text] { background: white; padding: 5px 10px; border: none; font-size: 14px; }
 input[type=submit] { padding: 5px 20px; color: black; border: none; font-size: 14px; background-color: gold; }
+#canvas { padding-top: 50px; width: 500px; max-width: 100%; margin: 0 auto;}
 </style>
 <script>
 var h = null
@@ -39,8 +40,10 @@ document.addEventListener("DOMContentLoaded", function(e) {
       var c = v[0][kk]
       if (/<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/.test(c)) {
         document.querySelector("#canvas").innerHTML = c
-      } else {
+      } else if (/data:.*/.test(c)) {
         document.querySelector("#canvas").innerHTML = "<img src='" +  c + "'>"
+      } else {
+        document.querySelector("#canvas").innerHTML = "<pre>" +  c + "</pre>"
       }
     })
   }
